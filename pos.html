@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>POS System</title>
+  <style>
+    body { 
+      margin: 0;
+      display: flex;
+      height: 100vh;
+    }
+    iframe {
+      border: none;
+      width: 50%;
+      height: 100%;
+    }
+    #adminFrame { width: 500px; } /* Fixed admin panel width */
+    #saleFrame { flex: 1; } /* Sale page takes remaining space */
+  </style>
+</head>
+<body>
+
+  <button id="adminLockBtn" style="
+  position: absolute; top: 10px; left: 10px; z-index: 999;
+  padding: 6px 10px; border-radius: 6px; background: #444; color: #fff; border: none;
+">
+  🔒 Locked
+</button>
+
+<div id="adminOverlay" style="
+  position: absolute;
+  top: 0; left: 0;
+  width: 500px; height: 100%;
+  background: rgba(0,0,0,0.1);
+  z-index: 998;
+  pointer-events: all;
+  display: block; /* visible when locked */
+"></div>
+
+
+
+  <iframe src="admin.html" id="adminFrame"></iframe>
+  <iframe src="420sale.html" id="saleFrame"></iframe>
+
+<script>
+const saleFrame = document.getElementById('saleFrame');
+const adminFrame = document.getElementById('adminFrame');
+const lockBtn = document.getElementById('adminLockBtn');
+const adminOverlay = document.getElementById('adminOverlay');
+
+let adminUnlocked = false;
+
+// toggle lock/unlock
+lockBtn.addEventListener('click', () => {
+  adminUnlocked = !adminUnlocked;
+  lockBtn.textContent = adminUnlocked ? '🔓 Unlocked' : '🔒 Locked';
+  
+  // Show/hide overlay to block admin interaction
+  adminOverlay.style.display = adminUnlocked ? 'none' : 'block';
+  
+  // Set scanner focus
+  if (adminUnlocked) {
+    adminFrame.contentWindow.postMessage({ type: 'activateScanner' }, '*');
+    saleFrame.contentWindow.postMessage({ type: 'deactivateScanner' }, '*');
+  } else {
+    saleFrame.contentWindow.postMessage({ type: 'activateScanner' }, '*');
+    adminFrame.contentWindow.postMessage({ type: 'deactivateScanner' }, '*');
+  }
+});
+
+// Optionally, moving mouse over frames respects lock state
+saleFrame.addEventListener('mouseenter', () => {
+  if (!adminUnlocked) {
+    saleFrame.contentWindow.postMessage({ type: 'activateScanner' }, '*');
+    adminFrame.contentWindow.postMessage({ type: 'deactivateScanner' }, '*');
+  }
+});
+
+adminFrame.addEventListener('mouseenter', () => {
+  if (adminUnlocked) {
+    adminFrame.contentWindow.postMessage({ type: 'activateScanner' }, '*');
+    saleFrame.contentWindow.postMessage({ type: 'deactivateScanner' }, '*');
+  }
+});
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,1680 @@
+
+<style>
+
+
+    /* Split Payment Popup Styles */
+#splitPaymentPopup .payment-popup-content {
+    background: rgba(30, 30, 30, 0.95);
+    border: 1px solid #4CAF50;
+    border-radius: 15px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+#splitPaymentPopup h2 {
+    color: #4CAF50;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.split-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.split-method {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.split-method.active {
+    border-color: #4CAF50;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.split-method h3 {
+    color: white;
+    font-size: 0.9rem;
+    margin: 0 0 10px 0;
+    text-align: center;
+    font-weight: 600;
+}
+
+.split-method input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 1.1rem;
+    text-align: center;
+    color: #1E1E1E;
+    font-weight: bold;
+}
+
+.split-method input:focus {
+    outline: 2px solid #4CAF50;
+}
+
+.split-total {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.split-total p {
+    margin: 5px 0;
+    color: white;
+    font-size: 1rem;
+}
+
+.split-total span {
+    font-weight: bold;
+    color: #4CAF50;
+    font-size: 1.2rem;
+}
+
+.cash-button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+#splitPaymentPopup button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#splitPaymentPopup button:first-child {
+    background: #4CAF50;
+    color: white;
+}
+
+#splitPaymentPopup button:first-child:hover {
+    background: #388E3C;
+    transform: translateY(-2px);
+}
+
+#splitPaymentPopup button:last-child {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#splitPaymentPopup button:last-child:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Payment Method Toggle Styles */
+.payment-toggle {
+    display: flex;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.payment-toggle button {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-toggle button.active {
+    background: #4CAF50;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+    .split-container {
+        flex-direction: column;
+    }
+    
+    #splitPaymentPopup .payment-popup-content {
+        padding: 15px;
+    }
+    
+    .split-method {
+        padding: 12px;
+    }
+    
+    #splitPaymentPopup button {
+        padding: 10px;
+    }
+}
+
+    
+    /* ==================== */
+    /* ANIMATIONS           */
+    /* ==================== */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+        from { 
+            opacity: 0; 
+            transform: translateY(20px); 
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+    }
+
+
+    /* ==================== */
+    /* BASE STYLES          */
+    /* ==================== */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
+        margin: 0;
+        padding: 0;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    h1 {
+        color: #ffcc00;
+        margin-top: 20px;
+    }
+
+
+/* ==================== */
+/* HEADER STYLES        */
+/* ==================== */
+.header-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-container h1 {
+    color: #ffcc00;
+    margin: 0;
+    font-weight: 700;
+    font-size: 2rem;
+    user-select: none;
+}
+
+.refresh-button {
+    position: absolute;
+    right: 4%; /* Changed from left to right */
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #4CAF50; /* Changed from red to green */
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.refresh-button:hover {
+    background-color: #388E3C; /* Darker green */
+}
+
+
+    /* ==================== */
+    /* SEARCH & NAVIGATION  */
+    /* ==================== */
+    .search-box {
+        margin: 20px 0;
+        padding: 10px;
+        width: 300px;
+        border-radius: 5px;
+        border: none;
+        font-size: 1rem;
+    }
+
+
+    /* ==================== */
+    /* PRODUCT CATEGORIES   */
+    /* ==================== */
+    .category-section {
+        width: 100%;
+        max-width: 1200px;
+        margin-bottom: 20px;
+    }
+
+    .category-section h2 {
+        color: #ffcc00;
+        margin-bottom: 10px;
+        margin-left: 4%;
+    }
+
+    .product-list {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        overflow-x: auto;
+        scrollbar-color: #ffcc00 #1d1d1d;
+    }
+
+    .product-list::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .product-list::-webkit-scrollbar-thumb {
+        background-color: #ffcc00;
+        border-radius: 4px;
+    }
+
+    .product-list::-webkit-scrollbar-track {
+        background-color: #2a2a2a;
+    }
+
+
+/* ==================== */
+/* PRODUCT CARDS        */
+/* ==================== */
+.product-card {
+    background: linear-gradient(135deg, #2a2a2a, #404040);
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    width: 160px; /* Reduced from 200px */
+    min-height: 220px; /* Added fixed height */
+    text-align: center;
+    position: relative;
+    flex: 0 0 auto;
+    animation: fadeInUp 0.8s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-card img {
+    width: 160px; /* Reduced from 200px */
+    height: 160px; /* Reduced from 200px */
+    border-radius: 10px;
+    margin-bottom: 8px;
+    object-fit: cover;
+}
+
+.product-card h3 {
+    font-size: 0.9rem; /* Reduced from 1rem */
+    margin: 0;
+    color: #ffcc00;
+    line-height: 1.2;
+}
+
+.product-card p {
+    font-size: 0.8rem; /* Reduced from 0.9rem */
+    margin: 3px 0;
+}
+
+    .add-to-cart {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .add-to-cart:hover {
+        background: #388E3C;
+    }
+
+
+    /* ==================== */
+    /* CHECKOUT SECTION     */
+    /* ==================== */
+    .checkout-section {
+        width: 100%;
+        max-width: 800px;
+        background: linear-gradient(135deg, #2a2a2a, #404040);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        margin-top: 20px;
+        overflow-y: auto;
+        max-height: 400px;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    .checkout-section h2 {
+        color: #ffcc00;
+        margin-bottom: 15px;
+    }
+
+    .checkout-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .checkout-item:last-child {
+        border-bottom: none;
+    }
+
+    .checkout-item img {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        margin-right: 10px;
+    }
+
+    .checkout-item-details {
+        flex: 1;
+    }
+
+    .checkout-item-details h3 {
+        margin: 0;
+        font-size: 1rem;
+        color: #ffcc00;
+    }
+
+    .checkout-item-details p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    .checkout-total {
+        text-align: right;
+        margin-top: 20px;
+        font-size: 1.2rem;
+        color: #ffcc00;
+    }
+
+    .checkout-button {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .checkout-button:hover {
+        background: #388E3C;
+    }
+
+    .remove-from-cart {
+        background: #ff4444;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .remove-from-cart:hover {
+        background: #cc0000;
+    }
+
+
+    /* ==================== */
+    /* POPUP STYLES         */
+    /* ==================== */
+    /* General Popup Styles */
+    .payment-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.416);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    }
+
+    .payment-popup.show {
+        display: flex !important;
+    }
+
+    /* Payment Popup Content */
+    .payment-popup-content {
+        background: linear-gradient(135deg, #303030, #474747);
+        color: #4CAF50;
+        border: 1px solid #4CAF50;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+        padding: 25px;
+        border-radius: 12px;
+        max-width: 320px;
+        width: 90%;
+        text-align: center;
+    }
+
+    .payment-popup-content h2 {
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
+
+    .payment-popup-content button {
+        background: #4CAF50;
+        color: white;
+        padding: 12px 0;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom: 12px;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .payment-popup-content button:hover {
+        background: #45a049;
+        box-shadow: 0 5px 12px rgba(76, 175, 79, 0.697);
+    }
+
+
+
+
+
+   /* Popup container */
+#cashPaymentPopup .payment-popup-content {
+    background: linear-gradient(135deg, #2a2a2a, #404040);
+    color: #ffffff;
+    border: 1px solid #4CAF50;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+    padding: 25px 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Title (no glow) */
+#cashPaymentPopup .payment-popup-content h2 {
+    font-size: 25px;
+    margin-bottom: 25px;
+    color: #4CAF50;
+    text-shadow: none;
+}
+
+/* Input field */
+#cashPaymentPopup input#cashAmount {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 1px solid #4CAF50;
+    background: #00000000;
+    color: #fff;
+    text-align: center;
+    outline: none;
+    margin-bottom: 25px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+#cashPaymentPopup input#cashAmount::placeholder {
+    color: #dadada;
+    font-weight: 400;
+}
+
+#cashPaymentPopup input#cashAmount:focus {
+    background: #1b1b1b;
+    border-color: #4CAF50;
+}
+
+/* === Button container for side-by-side layout === */
+#cashPaymentPopup .cash-button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Shared button styles */
+#cashPaymentPopup .cash-button-container button {
+    flex: 1;
+    padding: 12px 0;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Confirm (Complete Payment) button */
+#cashPaymentPopup .cash-button-container button:first-child {
+    background-color: #4CAF50;
+    color: #ffffff;
+}
+
+/* Cancel button */
+#cashPaymentPopup .cash-button-container button:last-child {
+    background-color: #d33115;
+    color: #fff;
+}
+
+
+
+
+    /* ==================== */
+    /* QUANTITY POPUP       */
+    /* ==================== */
+    #quantityPopupOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 10000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #quantityPopupOverlay.show {
+        display: flex !important;
+    }
+
+    #quantityPopup {
+        background: linear-gradient(135deg, #2a2a2a, #404040);
+        color: #eee;
+        padding: 25px 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+        width: 320px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        border: 2px solid #4CAF50;
+        animation: fadeInUp 0.4s ease forwards;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #quantityPopup h3 {
+        margin-top: 0;
+        font-size: 1.4rem;
+        text-align: center;
+        color: #4CAF50;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    #quantityPopup label {
+        display: block;
+        margin: 0 0 12px;
+        font-size: 1.1rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    #quantityPopup input[type="number"] {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: 2px solid #4CAF50;
+        font-size: 1.2rem;
+        box-sizing: border-box;
+        background: #333;
+        color: #eee;
+        text-align: center;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+
+    #quantityPopup input[type="number"]:focus {
+        border-color: #ffcc00;
+    }
+
+    #quantityPopup .button-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 20px;
+        gap: 10px;
+    }
+
+    #quantityPopup button {
+        flex: 1;
+        padding: 12px 0;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: background-color 0.25s ease, box-shadow 0.25s ease;
+        color: #fff;
+    }
+
+    #quantityPopup button:first-child {
+        background-color: #4CAF50;
+    }
+
+    #quantityPopup button:first-child:hover {
+        background-color: #45a049;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+    }
+
+    #quantityPopup button:last-child {
+        background-color: #d32f2f;
+    }
+
+    #quantityPopup button:last-child:hover {
+        background-color: #b71c1c;
+        box-shadow: 0 4px 12px rgba(211, 47, 47, 0.5);
+    }
+
+
+    /* ==================== */
+    /* SUCCESS MESSAGE      */
+    /* ==================== */
+    .success-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        display: none;
+        transform: translate(-50%, -50%);
+        border: 3px solid #ffcc00;
+        background: #208323;
+        color: white;
+        padding: 25px 35px;
+        border-radius: 12px;
+        z-index: 11000;
+        box-shadow: 0 0 20px rgba(0,0,0,0.4);
+        text-align: center;
+        font-size: 1.1rem;
+        max-width: 90vw;
+    }
+
+    .success-message h2 {
+        color: #ffcc00;
+    }
+
+    .success-message p {
+        color: white;
+    }
+
+    /* Easter Egg Styles */
+.easter-egg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle, rgba(76,175,80,0.8), rgba(139,195,74,0.9));
+    z-index: 99999;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.easter-egg h1 {
+    color: #ffeb3b;
+    font-size: 4rem;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    margin-bottom: 30px;
+    animation: pulse 2s infinite;
+}
+
+.easter-egg img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #ffeb3b;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+</style>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>420 Sale</title>
+</head>
+<body>
+
+<!-- hidden scanner input (keeps focus for scanners but won't steal scroll) -->
+<input
+  id="barcodeScannerInput"
+  autocomplete="off"
+  tabindex="-1"
+  style="position:fixed;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none;border:0;padding:0;margin:0;"
+/>
+
+
+
+<!-- ==================== -->
+<!-- HEADER SECTION       -->
+<!-- ==================== -->
+<div class="header-container">
+    <button class="refresh-button" onclick="location.reload()">
+        <i class="fas fa-sync-alt"></i> <!-- Changed from sign-out to sync icon -->
+    </button>
+    <h1>420 Products</h1>
+</div>
+
+    <!-- ==================== -->
+    <!-- SEARCH SECTION       -->
+    <!-- ==================== -->
+    <input type="text" class="search-box" id="searchBox" placeholder="Search products..." />
+
+    <!-- ==================== -->
+    <!-- PRODUCT CATEGORIES   -->
+    <!-- ==================== -->
+    <div class="category-section">
+        <h2>Cannabis Strains</h2>
+        <div class="product-list" id="weedStrainsList"></div>
+    </div>
+
+    <div class="category-section">
+        <h2>Edibles</h2>
+        <div class="product-list" id="ediblesList"></div>
+    </div>
+
+    <div class="category-section">
+        <h2>Accessories</h2>
+        <div class="product-list" id="weedAccessoriesList"></div>
+    </div>
+
+    <!-- ==================== -->
+    <!-- CHECKOUT SECTION     -->
+    <!-- ==================== -->
+    <div class="checkout-section">
+        <h2>Checkout</h2>
+        <div id="checkoutItems"></div>
+        <div class="checkout-total">
+            <span id="totalAmount">0.00</span> min
+        </div>
+        <button class="checkout-button" onclick="openPaymentPopup()">Confirm Purchase</button>
+    </div>
+
+    <!-- ==================== -->
+    <!-- PAYMENT POPUPS       -->
+    <!-- ==================== -->
+    <!-- Main Payment Method Popup -->
+    <div class="payment-popup" id="paymentPopup">
+        <div class="payment-popup-content">
+            <h2>Payment Method</h2><br>
+            <button onclick="handleCashPayment()">Cash</button>
+            <button onclick="handleCardPayment()">Card</button>
+            <button onclick="handleEftPayment()">EFT</button>
+            <button onclick="handleSplitPayment()">Split Payment</button>
+            <button onclick="closePaymentPopup()" style="background: #d32f2f;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Cash Payment Popup -->
+    <div class="payment-popup" id="cashPaymentPopup">
+        <div class="payment-popup-content">
+            <h2>Cash Payment</h2>
+            <input type="number" id="cashAmount" placeholder="Enter amount" />
+<div class="cash-button-container">
+    <button onclick="completeCashPayment()">Complete Payment</button>
+    <button onclick="closeCashPaymentPopup()">Cancel</button>
+</div>
+
+        </div>
+    </div>
+
+    <!-- Card Payment Popup -->
+    <div class="payment-popup" id="cardPaymentPopup">
+        <div class="payment-popup-content">
+            <h2>Card Payment</h2>
+            <button onclick="completeCardPayment()">Confirm Card Payment</button>
+            <button onclick="closeCardPaymentPopup()" style="background: #d32f2f;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- EFT Payment Popup -->
+<div class="payment-popup" id="eftPaymentPopup">
+    <div class="payment-popup-content">
+        <h2>EFT Payment</h2>
+        <input type="number" id="eftAmount" placeholder="Enter amount" />
+        <div class="cash-button-container">
+            <button onclick="completeEftPayment()">Complete EFT Payment</button>
+            <button onclick="closeEftPaymentPopup()" style="background: #d32f2f;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Split Payment Popup -->
+<div class="payment-popup" id="splitPaymentPopup">
+    <div class="payment-popup-content">
+        <h2>Split Payment</h2>
+        <div class="split-container">
+            <div class="split-method">
+                <h3>Cash Amount</h3>
+                <input type="number" id="cashSplitAmount" placeholder="0.00 min" />
+            </div>
+            <div class="split-method">
+                <h3>Card Amount</h3>
+                <input type="number" id="cardSplitAmount" placeholder="0.00 min" />
+            </div>
+        </div>
+        <div class="split-total">
+            <p>Total: <span id="splitTotal">0.00</span> min</p>
+            <p>Remaining: <span id="splitRemaining">0.00</span> min</p>
+        </div>
+        <div class="cash-button-container">
+            <button onclick="completeSplitPayment()">Complete Payment</button>
+            <button onclick="closeSplitPaymentPopup()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+    <!-- ==================== -->
+    <!-- SUCCESS MESSAGE      -->
+    <!-- ==================== -->
+    <div class="div success-freeze">
+        <div class="success-message" id="successMessage">
+            <h3>Sale Complete</h3>
+            <p>Refreshing in <span id="countdown">5</span></p>
+        </div>
+    </div>
+
+    <!-- ==================== -->
+    <!-- QUANTITY POPUP       -->
+    <!-- ==================== -->
+    <div id="quantityPopupOverlay">
+        <div id="quantityPopup">
+            <h3 id="quantityProductName"></h3>
+            <label>
+                <center>Quantity:</center><br>
+                <input type="number" id="quantityInput" min="1" value="1" />
+            </label>
+            <div class="button-container">
+                <button onclick="confirmQuantity()">Confirm</button>
+                <button onclick="closeQuantityPopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+// Add these functions to your POS JavaScript
+function handleSplitPayment() {
+    document.getElementById("paymentPopup").classList.remove("show");
+    document.getElementById("splitPaymentPopup").classList.add("show");
+    
+    // Initialize split payment values
+    document.getElementById("cashSplitAmount").value = "";
+    document.getElementById("cardSplitAmount").value = "";
+    document.getElementById("splitTotal").textContent = "0.00";
+    document.getElementById("splitRemaining").textContent = totalAmount.toFixed(2);
+    
+    // Add event listeners to update amounts in real-time
+    document.getElementById("cashSplitAmount").addEventListener("input", updateSplitAmounts);
+    document.getElementById("cardSplitAmount").addEventListener("input", updateSplitAmounts);
+}
+
+function closeSplitPaymentPopup() {
+    document.getElementById("splitPaymentPopup").classList.remove("show");
+}
+
+function updateSplitAmounts() {
+    const cashAmount = parseFloat(document.getElementById("cashSplitAmount").value) || 0;
+    const cardAmount = parseFloat(document.getElementById("cardSplitAmount").value) || 0;
+    const totalPaid = cashAmount + cardAmount;
+    const remaining = totalAmount - totalPaid;
+    
+    document.getElementById("splitTotal").textContent = totalPaid.toFixed(2);
+    document.getElementById("splitRemaining").textContent = remaining.toFixed(2);
+}
+
+function completeSplitPayment() {
+    const cashAmount = parseFloat(document.getElementById("cashSplitAmount").value) || 0;
+    const cardAmount = parseFloat(document.getElementById("cardSplitAmount").value) || 0;
+    const totalPaid = cashAmount + cardAmount;
+    
+    if (totalPaid < totalAmount) {
+        alert(`Insufficient payment. Remaining amount: R${(totalAmount - totalPaid).toFixed(2)}`);
+        return;
+    }
+    
+    // Check stock availability before completing payment
+    const products = JSON.parse(localStorage.getItem("products")) || [];
+    const outOfStockItems = checkoutItems.filter(item => {
+        const product = products.find(p => p.name === item.name && p.type === item.type);
+        return !product || product.quantity < item.quantity;
+    });
+    
+    if (outOfStockItems.length > 0) {
+        alert(`Some items are no longer available in the requested quantities`);
+        return;
+    }
+    
+    if (totalPaid > totalAmount) {
+        alert(`Change due: R${(totalPaid - totalAmount).toFixed(2)}`);
+    }
+    
+    // Save transaction with both payment methods
+    saveSplitTransactionData(cashAmount, cardAmount);
+    showSuccessMessage();
+}
+
+function saveSplitTransactionData(cashAmount, cardAmount) {
+    // First update the product quantities
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+    products = products.map(product => {
+        const soldItem = checkoutItems.find(item => 
+            item.name === product.name && 
+            item.type === product.type
+        );
+        if (soldItem) {
+            return {...product, quantity: product.quantity - soldItem.quantity};
+        }
+        return product;
+    });
+    localStorage.setItem("products", JSON.stringify(products));
+    
+    // Notify admin panel of the update
+    localStorage.setItem("stockUpdated", Date.now());
+    
+    // Then save the transaction data
+    const transactionData = {
+        customerId: `CUST-${Date.now()}`,
+        products: checkoutItems.map(item => ({
+            name: item.name,
+            type: item.type,
+            quantity: item.quantity,
+            totalPrice: item.totalPrice
+        })),
+        totalAmount: totalAmount,
+        time: new Date().toISOString(),
+        paymentMethod: "split",
+        cashAmount: cashAmount,
+        cardAmount: cardAmount
+    };
+
+    // Save to transactions history
+    const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+    transactions.push(transactionData);
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+
+    // Calculate grams sold
+    const gramsSold = checkoutItems.reduce((total, item) => {
+        const isWeed = item.type === "strain" && 
+                      !item.name.toLowerCase().includes("joint") &&
+                      !item.name.toLowerCase().includes("bong") &&
+                      !item.name.toLowerCase().includes("pr") &&
+                      !item.name.toLowerCase().includes("PR") &&
+                      !item.name.toLowerCase().includes("25") &&
+                      !item.name.toLowerCase().includes("dab") &&
+                      !item.name.toLowerCase().includes("accessory");
+        return isWeed ? total + item.quantity : total;
+    }, 0);
+
+    localStorage.setItem("latestSale", JSON.stringify({
+        totalAmount: totalAmount,
+        products: transactionData.products,
+        gramsSold: gramsSold,
+        paymentMethod: "split",
+        cashAmount: cashAmount,
+        cardAmount: cardAmount,
+        timestamp: transactionData.time
+    }));
+}
+
+
+        // ==================== //
+        // INITIALIZATION       //
+        // ==================== //
+        const products = JSON.parse(localStorage.getItem("products")) || [];
+        let checkoutItems = [];
+        let totalAmount = 0;
+
+        const weedStrains = products.filter(product => product.type === "strain" || product.type === "joint");
+        const edibles = products.filter(product => product.type === "edible");
+        const weedAccessories = products.filter(product => product.type === "weed_accessory");
+
+        // ==================== //
+        // PRODUCT DISPLAY      //
+        // ==================== //
+
+
+function displayProducts(categoryProducts, containerId) {
+    const productList = document.getElementById(containerId);
+    productList.innerHTML = "";
+
+    if (categoryProducts.length === 0) {
+        productList.innerHTML = "<p>No products found.</p>";
+        return;
+    }
+
+    categoryProducts.forEach((product) => {
+        productList.innerHTML += `
+            <div class="product-card">
+                <img src="${product.image}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p>${product.price} min</p>
+                <button class="add-to-cart" onclick="addToCheckoutByName('${product.type}', '${product.name.replace(/'/g, "\\'")}')">+</button>
+            </div>
+        `;
+    });
+}
+
+
+
+
+        // Initial display of products
+        displayProducts(weedStrains, "weedStrainsList");
+        displayProducts(edibles, "ediblesList");
+        displayProducts(weedAccessories, "weedAccessoriesList");
+
+        // Search functionality
+        const searchBox = document.getElementById("searchBox");
+        searchBox.addEventListener("input", (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            displayProducts(
+                weedStrains.filter(p => p.name.toLowerCase().includes(searchTerm)), 
+                "weedStrainsList"
+            );
+            displayProducts(
+                edibles.filter(p => p.name.toLowerCase().includes(searchTerm)), 
+                "ediblesList"
+            );
+            displayProducts(
+                weedAccessories.filter(p => p.name.toLowerCase().includes(searchTerm)), 
+                "weedAccessoriesList"
+            );
+        });
+
+        // ==================== //
+        // CHECKOUT FUNCTIONS   //
+        // ==================== //
+        let selectedProduct = null;
+        let selectedCategory = null;
+
+function addToCheckoutByName(category, productName) {
+    let productsList;
+
+    if (category === "strain" || category === "joint") {
+        productsList = weedStrains;
+    } else if (category === "edible") {
+        productsList = edibles;
+    } else if (category === "weed_accessory") {
+        productsList = weedAccessories;
+    } else {
+        return;
+    }
+
+    const product = productsList.find(p => p.name === productName);
+    if (!product) return;
+
+    // Check stock
+    if (product.quantity <= 0) {
+        alert("This product is currently out of stock");
+        return;
+    }
+
+    // Check if already in checkout
+    const existingItemIndex = checkoutItems.findIndex(item => 
+        item.name === product.name && item.type === product.type
+    );
+
+    if (existingItemIndex !== -1) {
+        // If product is already in cart, just increment quantity by 1
+        const currentQuantity = checkoutItems[existingItemIndex].quantity;
+        if (currentQuantity + 1 > product.quantity) {
+            alert(`Only ${product.quantity} units available in stock`);
+            return;
+        }
+        checkoutItems[existingItemIndex].quantity += 1;
+        checkoutItems[existingItemIndex].totalPrice = (checkoutItems[existingItemIndex].quantity * product.price).toFixed(2);
+        updateCheckoutDisplay();
+        return; // Skip quantity popup
+    }
+
+    // If product not in cart, show quantity popup
+    selectedCategory = category;
+    selectedProduct = product;
+
+    document.getElementById("quantityProductName").textContent = product.name;
+    document.getElementById("quantityInput").value = 1;
+    document.getElementById("quantityPopupOverlay").classList.add("show");
+}
+
+
+
+        function closeQuantityPopup() {
+            document.getElementById("quantityPopupOverlay").classList.remove("show");
+        }
+
+function confirmQuantity() {
+    const quantityInput = document.getElementById("quantityInput");
+    let quantity = parseFloat(quantityInput.value);
+    
+    if (isNaN(quantity) || quantity <= 0) {
+        alert("Please enter a valid quantity.");
+        return;
+    }
+
+    // Check stock availability
+    if (selectedProduct.quantity < quantity) {
+        alert(`Only ${selectedProduct.quantity} units available in stock`);
+        return;
+    }
+
+        const products = JSON.parse(localStorage.getItem("products")) || [];
+    const freshProduct = products.find(p => 
+        p.name === selectedProduct.name && 
+        p.type === selectedProduct.type
+    );
+
+    if (!freshProduct || freshProduct.quantity < quantity) {
+        alert(`Only ${freshProduct?.quantity || 0} units available in stock`);
+        return;
+    }
+
+    // Check if product is already in cart
+    const existingItemIndex = checkoutItems.findIndex(item => 
+        item.name === selectedProduct.name && item.type === selectedProduct.type
+    );
+
+    if (existingItemIndex !== -1) {
+        // Update existing item
+        checkoutItems[existingItemIndex].quantity = quantity;
+        checkoutItems[existingItemIndex].totalPrice = (selectedProduct.price * quantity).toFixed(2);
+    } else {
+        // Add new item
+        const totalPrice = (selectedProduct.price * quantity).toFixed(2);
+        checkoutItems.push({
+            ...selectedProduct,
+            quantity: quantity,
+            totalPrice: totalPrice
+        });
+    }
+
+    updateCheckoutDisplay();
+    closeQuantityPopup();
+}
+
+function handleEftPayment() {
+    document.getElementById("paymentPopup").classList.remove("show");
+    document.getElementById("eftPaymentPopup").classList.add("show");
+}
+
+function closeEftPaymentPopup() {
+    document.getElementById("eftPaymentPopup").classList.remove("show");
+}
+
+function completeEftPayment() {
+    const eftAmount = parseFloat(document.getElementById("eftAmount").value);
+    
+    if (isNaN(eftAmount)) {
+        alert("Please enter a valid amount.");
+        return;
+    }
+    
+    if (eftAmount < totalAmount) {
+        alert("Insufficient amount received.");
+        return;
+    }
+
+    if (eftAmount > totalAmount) {
+        alert(`Overpaid: R${(eftAmount - totalAmount).toFixed(2)}. Consider refunding.`);
+    }
+    
+    saveTransactionData("eft");
+    showSuccessMessage();
+}
+
+
+function updateCheckoutDisplay() {
+    const checkoutItemsContainer = document.getElementById("checkoutItems");
+    const totalAmountElement = document.getElementById("totalAmount");
+
+    checkoutItemsContainer.innerHTML = "";
+    totalAmount = 0;
+
+    // Check for joint special offers
+    let smallJoints = checkoutItems.find(item =>
+        item.name.toLowerCase().includes("small joint") && item.quantity == 4);
+    let bigJoints = checkoutItems.find(item =>
+        item.name.toLowerCase().includes("big joint") && item.quantity == 4);
+
+    checkoutItems.forEach((item, index) => {
+        let itemPrice = item.totalPrice;
+
+        // Apply special pricing for joints
+        if (item.name.toLowerCase().includes("small joint")) {
+            if (item.quantity >= 4) {
+                const sets = Math.floor(item.quantity / 4);
+                const remainder = item.quantity % 4;
+                itemPrice = (sets * 100) + (remainder * item.price);
+            }
+        } else if (item.name.toLowerCase().includes("big joint")) {
+            if (item.quantity >= 4) {
+                const sets = Math.floor(item.quantity / 4);
+                const remainder = item.quantity % 4;
+                itemPrice = (sets * 150) + (remainder * item.price);
+            }
+        }
+
+        totalAmount += parseFloat(itemPrice);
+
+        const checkoutItem = document.createElement("div");
+        checkoutItem.className = "checkout-item";
+        checkoutItem.innerHTML = `
+            <img src="${item.image}" alt="${item.name}">
+            <div class="checkout-item-details">
+                <h3>${item.name}</h3>
+                <p>Quantity: ${item.quantity} units</p>
+                <p>${parseFloat(itemPrice).toFixed(2)} min</p>
+            </div>
+            <button class="remove-from-cart" onclick="removeFromCheckout(${index})">×</button>
+        `;
+        checkoutItemsContainer.appendChild(checkoutItem);
+    });
+
+    totalAmountElement.textContent = totalAmount.toFixed(2);
+}
+
+        function removeFromCheckout(index) {
+            checkoutItems.splice(index, 1);
+            updateCheckoutDisplay();
+        }
+
+        // ==================== //
+        // PAYMENT FUNCTIONS    //
+        // ==================== //
+        function openPaymentPopup() {
+            if (checkoutItems.length === 0) {
+                alert("Your cart is empty. Add products to checkout.");
+                return;
+            }
+            document.getElementById("paymentPopup").classList.add("show");
+        }
+
+        function closePaymentPopup() {
+            document.getElementById("paymentPopup").classList.remove("show");
+        }
+
+        function handleCashPayment() {
+            document.getElementById("paymentPopup").classList.remove("show");
+            document.getElementById("cashPaymentPopup").classList.add("show");
+        }
+
+        function closeCashPaymentPopup() {
+            document.getElementById("cashPaymentPopup").classList.remove("show");
+        }
+
+        function handleCardPayment() {
+            document.getElementById("paymentPopup").classList.remove("show");
+            document.getElementById("cardPaymentPopup").classList.add("show");
+        }
+
+        function closeCardPaymentPopup() {
+            document.getElementById("cardPaymentPopup").classList.remove("show");
+        }
+
+        function completeCashPayment() {
+            const cashAmount = parseFloat(document.getElementById("cashAmount").value);
+            
+            if (isNaN(cashAmount)) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+            
+            if (cashAmount < totalAmount) {
+                alert("Insufficient amount received.");
+                return;
+            }
+            
+            alert(`Payment successful! Change: R${(cashAmount - totalAmount).toFixed(2)}`);
+            saveTransactionData("cash");
+            showSuccessMessage();
+        }
+
+        function completeCardPayment() {
+            alert("Card payment confirmed. Purchase complete!");
+            saveTransactionData("card");
+            showSuccessMessage();
+        }
+
+        // ==================== //
+        // TRANSACTION HANDLING //
+        // ==================== //
+function saveTransactionData(paymentMethod) {
+     let products = JSON.parse(localStorage.getItem("products")) || [];
+    products = products.map(product => {
+        const soldItem = checkoutItems.find(item => item.name === product.name && item.type === product.type);
+        if (soldItem) {
+            return {...product, quantity: product.quantity - soldItem.quantity};
+        }
+        return product;
+    });
+    localStorage.setItem("products", JSON.stringify(products));
+    
+    // Notify admin panel of the update
+    localStorage.setItem("stockUpdated", Date.now());
+    
+    localStorage.setItem("products", JSON.stringify(products));
+    const transactionData = {
+        customerId: `CUST-${Date.now()}`,
+        products: checkoutItems.map(item => ({
+            name: item.name,
+            type: item.type,
+            quantity: item.quantity,
+            totalPrice: item.totalPrice
+        })),
+        totalAmount: totalAmount,
+        time: new Date().toISOString(),
+        paymentMethod: paymentMethod
+    };
+
+    // Save to transactions history
+    const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+    transactions.push(transactionData);
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+
+    // Calculate grams sold - exclude bong hits, dab hits, and accessories
+    const gramsSold = checkoutItems.reduce((total, item) => {
+        const isWeed = item.type === "strain" && 
+                      !item.name.toLowerCase().includes("joint") &&
+                      !item.name.toLowerCase().includes("bong") &&
+                      !item.name.toLowerCase().includes("dab") &&
+                      !item.name.toLowerCase().includes("accessory");
+        return isWeed ? total + item.quantity : total;
+    }, 0);
+
+    localStorage.setItem("latestSale", JSON.stringify({
+        totalAmount: totalAmount,
+        products: transactionData.products,
+        gramsSold: gramsSold,
+        paymentMethod: paymentMethod,
+        timestamp: transactionData.time
+    }));
+}
+
+        // ==================== //
+        // SUCCESS MESSAGE      //
+        // ==================== //
+function showSuccessMessage() {
+    const successMessage = document.getElementById("successMessage");
+    const countdownElement = document.getElementById("countdown");
+    successMessage.style.display = "block";
+
+    // Close all open popups
+    document.getElementById("paymentPopup").classList.remove("show");
+    document.getElementById("cashPaymentPopup").classList.remove("show");
+    document.getElementById("cardPaymentPopup").classList.remove("show");
+    document.getElementById("splitPaymentPopup").classList.remove("show");
+
+    let countdown = 5;
+    const interval = setInterval(() => {
+        countdown--;
+        countdownElement.textContent = countdown;
+        
+        if (countdown <= 0) {
+            clearInterval(interval);
+            resetCheckout();
+            // Change this line to refresh the current page instead of going to index.html
+            window.location.href = "420sale.html"; // Or just refresh: location.reload();
+        }
+    }, 1000);
+}
+
+function resetCheckout() {
+    checkoutItems = [];
+    totalAmount = 0;
+    updateCheckoutDisplay();
+    document.getElementById("successMessage").style.display = "none";
+    
+    // Clear any payment input fields
+    document.getElementById("cashAmount").value = "";
+    document.getElementById("cashSplitAmount").value = "";
+    document.getElementById("cardSplitAmount").value = "";
+}
+
+        // Easter Egg Code
+const easterEggCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+let inputSequence = [];
+
+document.addEventListener('keydown', (e) => {
+    inputSequence.push(e.key);
+    
+    // Keep only the last X items (where X is the length of the easter egg code)
+    if (inputSequence.length > easterEggCode.length) {
+        inputSequence = inputSequence.slice(inputSequence.length - easterEggCode.length);
+    }
+    
+    // Check if sequence matches
+    if (JSON.stringify(inputSequence) === JSON.stringify(easterEggCode)) {
+        activateEasterEgg();
+    }
+});
+
+function activateEasterEgg() {
+    const easterEgg = document.getElementById('easterEgg');
+    easterEgg.style.display = 'flex';
+    
+    // Play a sound if you want (uncomment if you add a sound file)
+    // const audio = new Audio('easter-egg-sound.mp3');
+    // audio.play();
+    
+    // Make the background trippy
+    document.body.style.background = 'linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000)';
+    document.body.style.backgroundSize = '1800% 1800%';
+    document.body.style.animation = 'rainbow 8s linear infinite';
+    
+    // Set timeout to remove the effect
+    setTimeout(() => {
+        easterEgg.style.display = 'none';
+        document.body.style.background = 'linear-gradient(135deg, #1e1e1e, #3a3a3a)';
+        document.body.style.animation = 'none';
+    }, 10000);
+    
+    // Reset the sequence
+    inputSequence = [];
+}
+
+// ----------------------
+// Barcode scanner setup
+// ----------------------
+let scannerActive = false;
+
+window.addEventListener('message', (e) => {
+  if (e.data?.type === 'activateScanner') {
+    scannerActive = true;
+    document.getElementById('barcodeScannerInput')?.focus();
+  } else if (e.data?.type === 'deactivateScanner') {
+    scannerActive = false;
+  }
+});
+
+// Update blur/click handlers to only refocus if scannerActive
+function setupBarcodeScanner() {
+  const scanner = document.getElementById('barcodeScannerInput');
+  if (!scanner) return;
+
+  // Initial focus only if active
+  if (scannerActive) scanner.focus();
+
+  document.addEventListener('click', (e) => {
+    if (!scannerActive) return;
+    const target = e.target;
+    if (!['INPUT','BUTTON','SELECT','TEXTAREA'].includes(target.tagName)) {
+      scanner.focus();
+    }
+  });
+
+  scanner.addEventListener('blur', () => {
+    if (!scannerActive) return;
+    setTimeout(() => {
+      const active = document.activeElement;
+      if (!['INPUT','BUTTON','SELECT','TEXTAREA'].includes(active.tagName)) {
+        scanner.focus();
+      }
+    }, 10);
+  });
+
+  scanner.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const code = scanner.value.trim();
+      scanner.value = '';
+      if (!code) return;
+      handleScannedBarcode(code);
+    }
+  });
+
+  // fallback buffer scanner (unchanged)
+  let buffer = '';
+  let lastTime = 0;
+  let timer;
+  document.addEventListener('keydown', (e) => {
+    if (!scannerActive) return; // only process if active
+    const now = Date.now();
+    const char = e.key;
+    if (char.length === 1) {
+      if (now - lastTime > 300) buffer = '';
+      buffer += char;
+      lastTime = now;
+
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (buffer.length >= 2) handleScannedBarcode(buffer);
+        buffer = '';
+      }, 80);
+    } else if (e.key === 'Enter' && buffer.length > 0) {
+      handleScannedBarcode(buffer);
+      buffer = '';
+    }
+  });
+}
+
+
+window.addEventListener('message', (e) => {
+  if (e.data?.type === 'activateScanner') {
+    scannerActive = true;
+    document.getElementById('barcodeScannerInput')?.focus();
+  } else if (e.data?.type === 'deactivateScanner') {
+    scannerActive = false;
+  }
+});
+
+
+// call on load
+window.addEventListener('load', setupBarcodeScanner);
+
+
+// Process a scanned barcode string
+function handleScannedBarcode(code) {
+  // Get fresh products from localStorage so we don't rely on stale in-memory arrays
+  const products = JSON.parse(localStorage.getItem('products')) || [];
+  const codeStr = String(code).trim();
+
+  // Match barcode (ensure admin saved barcode as product.barcode)
+  const product = products.find(p => p.barcode && String(p.barcode).trim() === codeStr);
+
+  if (!product) {
+    console.warn('Barcode not found:', codeStr);
+    flashMessage(`Barcode ${codeStr} not found`);
+    return;
+  }
+
+  // Use your existing function so behavior stays consistent:
+  // - if product not in cart -> shows quantity popup (first add)
+  // - if product already in cart -> increments by 1 (subsequent scans)
+  addToCheckoutByName(product.type, product.name);
+
+  // optional tiny visual feedback
+  flashMessage(`${product.name} scanned`);
+}
+
+// small floating flash for quick feedback
+function flashMessage(msg) {
+  let el = document.getElementById('barcodeFlash');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'barcodeFlash';
+    Object.assign(el.style, {
+      position: 'fixed', top: '12px', left: '50%', transform: 'translateX(-50%)',
+      padding: '8px 12px', background: '#111', color: '#fff', borderRadius: '6px',
+      zIndex: 9999, opacity: 0, transition: 'opacity 150ms'
+    });
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.opacity = '1';
+  setTimeout(() => el.style.opacity = '0', 700);
+}
+
+// initialize on load
+window.addEventListener('load', () => {
+  setupBarcodeScanner();
+});
+
+
+    </script>
+    <!-- Easter Egg -->
+<div class="easter-egg" id="easterEgg">
+   <center> <h1>SMOKE WEED EVERYDAY<br> #DillenWasHier</h1></center>
+    <img src="https://i.gifer.com/7VA.gif" alt="Dancing weed leaf">
+</div>
+</body>
+</html>

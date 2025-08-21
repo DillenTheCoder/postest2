@@ -1,0 +1,1593 @@
+ <style>
+    /* ==================== */
+    /* BASE STYLES          */
+    /* ==================== */
+    body {
+        font-family: 'Urbanist', sans-serif;
+        background: #1E1E1E;
+        margin: 0;
+        padding: 0;
+        color: #FFFFFF;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* ==================== */
+    /* TYPOGRAPHY           */
+    /* ==================== */
+    .stats-box h3,
+    .graph-container h2,
+    .summary-box h3,
+    .product-section h3,
+    .add-products-container h2,
+    .existing-products-container h2 {
+        color: #4CAF50;
+        font-weight: bold;
+    }
+
+    .stats-box h3 {
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .graph-container h2 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .summary-box h3 {
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .stats-box p,
+    .summary-box p {
+        font-size: 1.2rem;
+        margin: 0;
+        color: #FFFFFF;
+    }
+
+    /* ==================== */
+    /* HEADER STYLES        */
+    /* ==================== */
+    .admin-header {
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.7);
+        border-bottom: 3px solid #4CAF50;
+        backdrop-filter: blur(20px);
+        width: 100%;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        color: #4CAF50;
+    }
+
+    /* ==================== */
+    /* LAYOUT CONTAINERS    */
+    /* ==================== */
+    .admin-container {
+        width: 90%;
+        max-width: 1200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        gap: 20px;
+        flex: 1;
+    }
+
+
+    /* ==================== */
+/* CASH UP MODAL        */
+/* ==================== */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  overflow-y: auto;
+}
+
+.modal-content {
+  background: #2a2a2a;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: white;
+}
+
+.cashup-summary {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.cashup-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cashup-row:last-child {
+  border-bottom: none;
+}
+
+.cashup-row.highlight {
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.cashup-row.total {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #4CAF50;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #4CAF50;
+}
+
+.products-list {
+  max-height: 300px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.product-item:last-child {
+  border-bottom: none;
+}
+
+.cashup-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.cashup-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: #4CAF50;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cashup-actions button:hover {
+  background: #388E3C;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    margin: 10% auto;
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .cashup-actions {
+    flex-direction: column;
+  }
+}
+
+    .stats-container {
+        display: flex;
+        justify-content: space-around;
+        gap: 10px;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .graphs-wrapper {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        gap: 20px;
+    }
+
+    .summary-container {
+        display: flex;
+        justify-content: space-around;
+        gap: 10px;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .tab-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* ==================== */
+    /* CARD COMPONENTS      */
+    /* ==================== */
+    .stats-box {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        min-width: 150px;
+        max-width: 200px;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stats-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .graph-container {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        height: auto;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .summary-box {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        flex: 1;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* ==================== */
+    /* BUTTONS & CONTROLS   */
+    /* ==================== */
+    .tab-button {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #FFFFFF;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .tab-button.active {
+        background: #4CAF50;
+        color: #FFFFFF;
+    }
+
+    .tab-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .reset-sales-data {
+        background: #FF0000;
+        width: 100%;
+        font-size: 15px;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .reset-sales-data:hover {
+        background: #a90000;
+        transform: translateY(-2px);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .cash-up-button {
+        background: #4CAF50;
+        width: 100%;
+        font-size: 15px;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .returnbutton {
+        width: 150px;
+        height:30px;
+        font-size: 15px;
+        border: none;
+        border-radius: 10px;
+        color: white;
+        background-color: red;
+    }
+
+    .returnbutton:hover {
+        transition: .2s;
+        box-shadow: rgba(255, 255, 255, 0.568) 0px 5px 5px;
+    }
+
+    /* ==================== */
+    /* PRODUCT MANAGEMENT   */
+    /* ==================== */
+    .product-section {
+        margin-bottom: 30px;
+    }
+
+    .product-section h3 {
+        font-size: 1rem;
+        color: #ffeb3b;
+        margin-bottom: 10px;
+    }
+
+    .add-products-container {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .add-products-container h2 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .add-products-container label {
+        display: block;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        color: #4CAF50;
+    }
+
+    .add-products-container input,
+    .add-products-container select,
+    .add-products-container button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: none;
+        font-size: 0.9rem;
+        background: rgb(255, 255, 255);
+        color: #000000;
+        transition: background 0.3s ease;
+    }
+
+    .add-products-container input:focus,
+    .add-products-container select:focus,
+    .add-products-container button:focus {
+        background: rgba(255, 255, 255, 0.2);
+        outline: none;
+    }
+
+    .add-products-container button {
+        background: #4CAF50;
+        color: #FFFFFF;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .add-products-container button:hover {
+        background: #388E3C;
+        transform: translateY(-2px);
+    }
+
+    /* Existing Products */
+    .existing-products-container {
+        width: 100%;
+        max-width: 1200px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .subcategory {
+        margin-bottom: 25px;
+    }
+
+    .subcategory-header {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #4CAF50;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Product List */
+    .product-list {
+        display: flex;
+        gap: 15px;
+        padding: 10px;
+        overflow-x: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #4CAF50 #2a2a2a;
+    }
+
+    .product-list::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .product-list::-webkit-scrollbar-thumb {
+        background-color: #4CAF50;
+        border-radius: 4px;
+    }
+
+    .product-list::-webkit-scrollbar-track {
+        background-color: #2a2a2a;
+    }
+
+    /* ==================== */
+    /* PRODUCT CARD STYLES  */
+    /* ==================== */
+    .product-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 12px;
+        border-radius: 10px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        width: 150px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .product-card img {
+        width: 130px;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin: 0 auto 6px;
+    }
+
+    .product-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .product-card .product-info .product-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #4CAF50;
+        margin: 0;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .product-price {
+        font-size: 15px;
+        color: #FFFFFF;
+        margin-top: 5px;
+    }
+
+    .stock-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin: 4px 0;
+    }
+
+    .stock-quantity {
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px 8px;
+        border-radius: 12px;
+        background: rgba(76, 175, 80, 0.2);
+        color: #4CAF50;
+        display: inline-block;
+    }
+
+    .stock-quantity.low-stock {
+        background: rgba(255, 0, 0, 0.2);
+        color: #FF5252;
+        animation: pulse 1.5s infinite;
+    }
+
+    .quantity-control {
+        width: 100%;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-align: center;
+        font-size: 15px;
+        margin: 4px 0;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+        margin-top: 6px;
+    }
+
+    .action-btn {
+        flex: 1;
+        padding: 5px 8px;
+        border: none;
+        border-radius: 5px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .update-btn {
+        background: #4CAF50;
+        color: white;
+    }
+
+    .update-btn:hover {
+        background: #388E3C;
+        transform: translateY(-1px);
+    }
+
+    .delete-btn {
+        background: #f44336;
+        color: white;
+    }
+
+    .delete-btn:hover {
+        background: #d32f2f;
+        transform: translateY(-1px);
+    }
+
+    .quantity-display {
+        margin: 5px 0;
+        font-weight: bold;
+        font-size: 0.8rem;
+        padding: 3px 8px;
+        border-radius: 12px;
+        background: rgba(76, 175, 80, 0.2);
+        display: inline-block;
+        color: #4CAF50;
+    }
+
+    .quantity-display.low-stock {
+        background: rgba(255, 0, 0, 0.2);
+        color: #FF5252;
+        animation: pulse 1.5s infinite;
+    }
+
+    .quantity-controls {
+        display: flex;
+        gap: 5px;
+        margin: 8px 0;
+        align-items: center;
+    }
+
+    .quantity-controls input {
+        width: 50px;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-align: center;
+    }
+
+    .quantity-controls button {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 8px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .quantity-controls button:hover {
+        background: #388E3C;
+        transform: translateY(-1px);
+    }
+
+    /* ==================== */
+    /* LOGIN OVERLAY        */
+    /* ==================== */
+
+    #login-overlay .login-container {
+        display: flex;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0px 50px 30px 10px rgba(0, 0, 0, 0.3);
+        max-width: 800px;
+        width: 90%;
+    }
+
+    #login-overlay .login-image {
+        flex: 1;
+        background: url('./assets/weed.jpg') no-repeat center center/cover;
+    }
+
+    #login-overlay .login-form {
+        flex: 1;
+        padding: 30px;
+        text-align: center;
+    }
+
+    #login-overlay h2 {
+        color: #4CAF50;
+        font-size: 40px;
+        margin-bottom: 20px;
+    }
+
+    #login-overlay input {
+        padding: 10px;
+        margin: 10px 0;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.1);
+        color: #FFFFFF;
+        transition: background 0.3s ease;
+    }
+
+    #login-overlay input:focus {
+        background: rgba(255, 255, 255, 0.2);
+        outline: none;
+    }
+
+    #login-overlay button {
+        margin-top: 20px;
+        width: 120px;
+        height: 30px;
+        font-size: 17px;
+        background: #4CAF50;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    #login-overlay button:hover {
+        background: #388E3C;
+        transform: translateY(-5px);
+    }
+
+    #error-message {
+        color: #FF0000;
+        margin-top: 10px;
+        display: none;
+    }
+
+    /* ==================== */
+    /* CANVAS STYLES        */
+    /* ==================== */
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 400px;
+    }
+
+    /* ==================== */
+    /* ANIMATIONS           */
+    /* ==================== */
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+
+    /* ==================== */
+    /* RESPONSIVE DESIGN    */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .product-card {
+            width: 140px;
+            padding: 10px;
+        }
+        
+        .product-card img {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .product-card .product-info .product-name {
+            font-size: 0.65rem;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .graph-container {
+            width: 48%;
+        }
+    }
+#cashup-products {
+  font-size: 12px;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 4px;
+  border-bottom: 1px dashed #ccc;
+  font-size: 12px;
+}
+
+</style>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+
+    <!-- Admin Panel -->
+<div class="admin-header">
+        <h1 class="admin-heading">Admin Panel</h1>
+    </div>
+<div class="admin-container">
+        <!-- Stats Boxes -->
+        <div class="stats-container">
+            <div class="stats-box">
+                <h3>GRAMS DISTRIBUTED</h3>
+                <p id="total-sales">0</p>
+            </div>
+            <div class="stats-box">
+                <h3>INCOME</h3>
+                <p id="total-revenue">0.00</p>
+            </div>
+            <div class="stats-box">
+                <h3>Customers</h3>
+                <p id="total-customers">0</p>
+            </div>
+            <div class="stats-box">
+                <h3>Average Spend</h3>
+                <p id="average-spend">R0.00</p>
+            </div>
+            <div class="stats-box">
+                <h3>Total Card Sales</h3>
+                <p id="total-card-sales">R0.00</p>
+            </div>
+            <div class="stats-box">
+                <h3>Total Cash Sales</h3>
+                <p id="total-cash-sales">R0.00</p>
+            </div>
+        </div>
+
+        <!-- Graphs Wrapper -->
+        <div class="graphs-wrapper">
+            <!-- Weed Sales Graph -->
+            <div class="graph-container">
+                <h2>Cannabis Distributed</h2>
+                <canvas id="weedSalesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <button class="reset-sales-data" onclick="resetSalesData()">Reset Sales Data</button>
+        <button class="cash-up-button" onclick="showCashUpModal()">Cash Up</button>
+
+        <!-- Add Product Form -->
+<!-- In the "Add New Product" form section of admin.html -->
+<div class="add-products-container">
+    <h2>Add New Product</h2>
+    <form id="addProductForm">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" required>
+
+        <!-- Subcategory for Weed -->
+        <div id="weedSubcategory">
+            <label for="weedCategory">Cannabis Category:</label>
+            <select id="weedCategory" name="weedCategory" onchange="updatePriceLabel()">
+                <option value="strain">Cannabis Strain</option>
+                <option value="edible">Edible</option>
+                <option value="weed_accessory">Accessory</option>
+            </select>
+        </div>
+
+        <!-- Price Label -->
+        <label for="productPrice" id="priceLabel">Price per Gram (R):</label>
+        <input type="number" id="productPrice" name="productPrice" step="0.01" required>
+
+        <!-- Add this inside your form, after productQuantity -->
+        <label for="productBarcode">Product Barcode:</label>
+        <input type="text" id="productBarcode" name="productBarcode" placeholder="Scan barcode here" required>
+
+
+        <!-- Add Quantity Field -->
+        <label for="productQuantity">Initial Stock Quantity:</label>
+        <input type="number" id="productQuantity" name="productQuantity" min="0" value="" required>
+
+        <label for="productImage">Product Image (Product images are not required) :</label>
+        <input type="file" id="productImage" name="productImage" accept="image/*">
+        <button type="submit">Add Product</button>
+    </form>
+</div>
+
+ 
+
+        <!-- Existing Products -->
+        <div class="existing-products-container">
+            <h2>Existing Products</h2>
+            
+            <!-- Cannabis Products Section -->
+            <div class="product-section">
+                
+                <!-- Strains -->
+                <div class="subcategory">
+                    <h4 class="subcategory-header">Strains</h4>
+                    <div class="product-list" id="weedStrainsList"></div>
+                </div>
+                
+                <!-- Edibles -->
+                <div class="subcategory">
+                    <h4 class="subcategory-header">Edibles</h4>
+                    <div class="product-list" id="weedEdiblesList"></div>
+                </div>
+                
+                <!-- Weed Accessories -->
+                <div class="subcategory">
+                    <h4 class="subcategory-header">Accessories</h4>
+                    <div class="product-list" id="weedAccessoriesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // Global sales data
+let salesData = {
+    totalSales: parseInt(localStorage.getItem("totalSales")) || 0,
+    totalRevenue: parseFloat(localStorage.getItem("totalRevenue")) || 0,
+    totalCustomers: parseInt(localStorage.getItem("totalCustomers")) || 0,
+    totalGramsSold: parseFloat(localStorage.getItem("totalGramsSold")) || 0,
+    totalCardSales: parseFloat(localStorage.getItem("totalCardSales")) || 0,
+    totalCashSales: parseFloat(localStorage.getItem("totalCashSales")) || 0,
+    totalEFTSales: parseFloat(localStorage.getItem("totalEFTSales")) || 0,  // <-- NEW
+    weedSalesData: JSON.parse(localStorage.getItem("weedSalesData")) || new Array(24).fill(0)
+};
+
+
+        // Chart.js instance
+        let weedSalesChart;
+
+
+
+
+        // Initialize Chart.js graph
+        function initializeCharts() {
+            const weedCtx = document.getElementById('weedSalesChart').getContext('2d');
+            weedSalesChart = new Chart(weedCtx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+                    datasets: [{
+                        label: 'Cannabis Customers',
+                        data: salesData.weedSalesData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true },
+                        x: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+ 
+// Show cash-up modal
+function showCashUpModal() {
+  const modal = document.getElementById('cashUpModal');
+  modal.style.display = 'block';
+  generateCashUpContent();
+}
+
+// Close cash-up modal
+function closeCashUpModal() {
+  document.getElementById('cashUpModal').style.display = 'none';
+}
+
+// Generate cash-up content
+function generateCashUpContent() {
+  const now = new Date();
+  
+  // Set basic info
+  document.getElementById('cashup-date').textContent = now.toLocaleDateString();
+  document.getElementById('cashup-time').textContent = now.toLocaleTimeString();
+  
+  // Set summary data
+  document.getElementById('cashup-grams').textContent = salesData.totalGramsSold.toFixed(2) + 'g';
+  document.getElementById('cashup-revenue').textContent = 'R' + salesData.totalRevenue.toFixed(2);
+  document.getElementById('cashup-customers').textContent = salesData.totalCustomers;
+  document.getElementById('cashup-avg-spend').textContent = 'R' + calculateAverageSpend().toFixed(2);
+  document.getElementById('cashup-card-sales').textContent = 'R' + salesData.totalCardSales.toFixed(2);
+  document.getElementById('cashup-cash-sales').textContent = 'R' + salesData.totalCashSales.toFixed(2);
+  document.getElementById('cashup-eft-sales').textContent = 'R' + (salesData.totalEFTSales || 0).toFixed(2);
+  document.getElementById('cashup-grand-total').textContent = 'R' + (salesData.totalCardSales + salesData.totalCashSales).toFixed(2);
+  
+  // Generate products sold today
+  const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+  const todayStr = now.toLocaleDateString();
+  const todaySales = transactions.filter(sale => {
+    const saleDate = new Date(sale.time).toLocaleDateString();
+    return saleDate === todayStr;
+  });
+
+  const productTotals = {};
+  todaySales.forEach(sale => {
+    sale.products.forEach(item => {
+      productTotals[item.name] = (productTotals[item.name] || 0) + item.quantity;
+    });
+  });
+
+  const productsList = document.getElementById('cashup-products');
+  productsList.innerHTML = '';
+  
+  const sortedProducts = Object.entries(productTotals).sort((a, b) => a[0].localeCompare(b[0]));
+  
+  if (sortedProducts.length === 0) {
+    productsList.innerHTML = '<p>No products sold today</p>';
+    return;
+  }
+
+  sortedProducts.forEach(([name, qty]) => {
+    const productItem = document.createElement('div');
+    productItem.className = 'product-item';
+    productItem.innerHTML = `
+      <span>${name}</span>
+      <span>x${qty}</span>
+    `;
+    productsList.appendChild(productItem);
+  });
+}
+
+// Print cash-up
+function printCashUp() {
+  const printContent = document.getElementById('cashUpModal').innerHTML;
+  const originalContent = document.body.innerHTML;
+  
+  document.body.innerHTML = `
+    <div style="padding:20px;background:white;color:black;">
+      ${printContent}
+    </div>
+  `;
+  
+  window.print();
+  document.body.innerHTML = originalContent;
+  showCashUpModal();
+}
+
+// Share cash-up
+async function shareCashUp() {
+  try {
+    // Create a text version of the cash-up
+    const now = new Date();
+    let shareText = `Cash Up Report - ${now.toLocaleDateString()}\n\n`;
+    
+    shareText += `Total Grams: ${salesData.totalGramsSold.toFixed(2)}g\n`;
+    shareText += `Total Revenue: R${salesData.totalRevenue.toFixed(2)}\n`;
+    shareText += `Total Customers: ${salesData.totalCustomers}\n`;
+    shareText += `Average Spend: R${calculateAverageSpend().toFixed(2)}\n`;
+    shareText += `Card Sales: R${salesData.totalCardSales.toFixed(2)}\n`;
+    shareText += `Cash Sales: R${salesData.totalCashSales.toFixed(2)}\n`;
+    shareText += `Grand Total: R${(salesData.totalCardSales + salesData.totalCashSales).toFixed(2)}\n\n`;
+    
+    shareText += `Products Sold:\n`;
+    const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+    const todayStr = now.toLocaleDateString();
+    const todaySales = transactions.filter(sale => {
+      const saleDate = new Date(sale.time).toLocaleDateString();
+      return saleDate === todayStr;
+    });
+
+    const productTotals = {};
+    todaySales.forEach(sale => {
+      sale.products.forEach(item => {
+        productTotals[item.name] = (productTotals[item.name] || 0) + item.quantity;
+      });
+    });
+
+    Object.entries(productTotals).sort((a, b) => a[0].localeCompare(b[0])).forEach(([name, qty]) => {
+      shareText += `${name} x${qty}\n`;
+    });
+
+    if (navigator.share) {
+      await navigator.share({
+        title: `Cash Up - ${now.toLocaleDateString()}`,
+        text: shareText
+      });
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      const textarea = document.createElement('textarea');
+      textarea.value = shareText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      alert('Cash-up report copied to clipboard!');
+    }
+  } catch (err) {
+    console.error('Error sharing:', err);
+  }
+}
+
+// Save cash-up
+function saveCashUp() {
+  const now = new Date();
+  const cashUpData = {
+    date: now.toISOString(),
+    grams: salesData.totalGramsSold,
+    revenue: salesData.totalRevenue,
+    customers: salesData.totalCustomers,
+    avgSpend: calculateAverageSpend(),
+    cardSales: salesData.totalCardSales,
+    cashSales: salesData.totalCashSales,
+    products: {}
+  };
+
+  const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+  const todayStr = now.toLocaleDateString();
+  const todaySales = transactions.filter(sale => {
+    const saleDate = new Date(sale.time).toLocaleDateString();
+    return saleDate === todayStr;
+  });
+
+  todaySales.forEach(sale => {
+    sale.products.forEach(item => {
+      cashUpData.products[item.name] = (cashUpData.products[item.name] || 0) + item.quantity;
+    });
+  });
+
+  // Get existing cash-ups or initialize empty array
+  const cashUps = JSON.parse(localStorage.getItem('cashUps')) || [];
+  
+  // Add new cash-up
+  cashUps.push(cashUpData);
+  
+  // Save back to localStorage
+  localStorage.setItem('cashUps', JSON.stringify(cashUps));
+  
+  alert('Cash-up saved successfully!');
+}
+
+
+
+
+// Helper function to load image as data URL
+async function loadImageAsDataURL(imagePath) {
+  return new Promise((resolve, reject) => {
+    try {
+      const { app } = require('electron').remote;
+      const path = require('path');
+      const fs = require('fs');
+      
+      const fullPath = path.join(app.getAppPath(), imagePath);
+      const imageData = fs.readFileSync(fullPath);
+      const base64 = imageData.toString('base64');
+      const mimeType = imagePath.endsWith('.png') ? 'image/png' : 'image/jpeg';
+      resolve(`data:${mimeType};base64,${base64}`);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+
+
+        
+
+
+
+        // Update the UI
+        function updateUI() {
+            document.getElementById("total-sales").textContent = salesData.totalGramsSold.toFixed(2);
+            document.getElementById("total-revenue").textContent = `R${salesData.totalRevenue.toFixed(2)}`;
+            document.getElementById("total-customers").textContent = salesData.totalCustomers;
+            document.getElementById("average-spend").textContent = `R${calculateAverageSpend().toFixed(2)}`;
+            document.getElementById("total-card-sales").textContent = `R${salesData.totalCardSales.toFixed(2)}`;
+            document.getElementById("total-cash-sales").textContent = `R${salesData.totalCashSales.toFixed(2)}`;
+
+            weedSalesChart.data.datasets[0].data = salesData.weedSalesData;
+            weedSalesChart.update();
+        }
+
+        function calculateAverageSpend() {
+            return salesData.totalCustomers === 0 ? 0 : salesData.totalRevenue / salesData.totalCustomers;
+        }
+
+        // Update stats on sale
+function updateStatsOnSale(saleData) {
+    salesData.totalSales += 1;
+    salesData.totalRevenue += parseFloat(saleData.totalAmount);
+    salesData.totalCustomers += 1;
+    salesData.totalGramsSold += parseFloat(saleData.gramsSold || 0);
+
+    if (saleData.paymentMethod === "split") {
+        salesData.totalCashSales += parseFloat(saleData.cashAmount || 0);
+        salesData.totalCardSales += parseFloat(saleData.cardAmount || 0);
+    } 
+    else if (saleData.paymentMethod === "card") {
+        salesData.totalCardSales += parseFloat(saleData.totalAmount);
+    } 
+    else if (saleData.paymentMethod === "eft") {  // <-- NEW
+        salesData.totalCardSales += parseFloat(saleData.totalAmount); // count as card
+        salesData.totalEFTSales += parseFloat(saleData.totalAmount);  // track separately
+    } 
+    else { // cash
+        salesData.totalCashSales += parseFloat(saleData.totalAmount);
+    }
+
+    const currentHour = new Date().getHours();
+    salesData.weedSalesData[currentHour] += 1;
+
+    // Save updated totals
+    localStorage.setItem("totalSales", salesData.totalSales);
+    localStorage.setItem("totalRevenue", salesData.totalRevenue);
+    localStorage.setItem("totalCustomers", salesData.totalCustomers);
+    localStorage.setItem("totalGramsSold", salesData.totalGramsSold);
+    localStorage.setItem("totalCardSales", salesData.totalCardSales);
+    localStorage.setItem("totalCashSales", salesData.totalCashSales);
+    localStorage.setItem("totalEFTSales", salesData.totalEFTSales); // <-- NEW
+    localStorage.setItem("weedSalesData", JSON.stringify(salesData.weedSalesData));
+
+    updateUI();
+}
+
+
+
+        // Check for new sales
+function checkForNewSales() {
+    const saleData = JSON.parse(localStorage.getItem("latestSale"));
+    if (saleData) {
+        updateStatsOnSale(saleData);
+        localStorage.removeItem("latestSale"); // <-- removes right after processing
+    }
+}
+
+        setInterval(checkForNewSales, 1000);
+
+        // Add this near your existing interval check
+setInterval(function() {
+    if (localStorage.getItem("stockUpdated")) {
+        loadExistingProducts(); // Refresh product list
+        localStorage.removeItem("stockUpdated");
+    }
+}, 1000); // Check every second for stock updates
+
+
+
+document.getElementById("addProductForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const productName = document.getElementById("productName").value;
+    const weedCategory = document.getElementById("weedCategory").value;
+    const productPrice = document.getElementById("productPrice").value;
+    const productQuantity = document.getElementById("productQuantity").value;
+    const productBarcode = document.getElementById("productBarcode").value; // NEW
+    const productImage = document.getElementById("productImage").files[0];
+
+    if (!productName || !productPrice || !productQuantity || !productBarcode) {
+        alert("Please fill out all required fields.");
+        return;
+    }
+
+    try {
+        let imageData;
+        if (productImage) {
+            imageData = await compressImage(productImage);
+        } else {
+            switch(weedCategory) {
+                case "strain": imageData = "assets/weed.jpg"; break;
+                case "edible": imageData = "assets/edable.jpg"; break;
+                case "weed_accessory": imageData = "assets/acceroies.jpg"; break;
+                default: imageData = "assets/weed.jpg";
+            }
+        }
+
+        const product = {
+            id: Date.now(),
+            name: productName,
+            type: weedCategory,
+            price: productPrice,
+            quantity: parseInt(productQuantity),
+            barcode: productBarcode,  // <-- SAVE BARCODE
+            image: imageData,
+            salesCount: 0
+        };
+
+        let products = JSON.parse(localStorage.getItem("products")) || [];
+        products.push(product);
+        localStorage.setItem("products", JSON.stringify(products));
+
+        alert("Product added successfully!");
+        document.getElementById("addProductForm").reset();
+        loadExistingProducts();
+    } catch (error) {
+        console.error("Error adding product:", error);
+        alert("Failed to add product. Please try again.");
+    }
+});
+
+const barcodeInput = document.getElementById("productBarcode");
+
+barcodeInput.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        document.getElementById("addProductForm").requestSubmit(); 
+    }
+});
+
+
+
+async function compressImage(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+
+                // Set maximum dimensions (reduce these numbers to make images smaller)
+                const MAX_WIDTH = 200;  // Reduced from 300
+                const MAX_HEIGHT = 200; // Reduced from 300
+                let width = img.width;
+                let height = img.height;
+
+                // Calculate new dimensions while maintaining aspect ratio
+                if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+                    const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
+                    width = Math.floor(width * ratio);
+                    height = Math.floor(height * ratio);
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Reduce quality significantly (0.3 is quite low)
+                resolve(canvas.toDataURL("image/jpeg", 0.4));
+            };
+            img.onerror = () => reject(new Error("Failed to load image"));
+            img.src = event.target.result;
+        };
+        reader.onerror = () => reject(new Error("Failed to read file"));
+        reader.readAsDataURL(file);
+    });
+}
+
+        // Load existing products
+// In the loadExistingProducts() function
+function loadExistingProducts() {
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    
+    document.getElementById("weedStrainsList").innerHTML = "";
+    document.getElementById("weedEdiblesList").innerHTML = "";
+    document.getElementById("weedAccessoriesList").innerHTML = "";
+
+    products.forEach((product) => {
+        const productCard = document.createElement("div");
+        productCard.className = "product-card";
+
+        // Determine quantity display color
+        const quantityClass = product.quantity <= 5 ? "low-stock" : "";
+        
+        // Check if image is a path (default image) or base64 data (uploaded image)
+        const imageSrc = product.image.startsWith('assets/') ? 
+            product.image : // use as-is if it's a path
+            product.image;  // use base64 data if it's an uploaded image
+        
+productCard.innerHTML = `
+    <img src="${imageSrc}" alt="${product.name}" onerror="this.src='assets/default.jpg'">
+    <h3 class="product-name">${product.name}</h3>
+    <p>Barcode: ${product.barcode || 'N/A'}</p> <!-- NEW -->
+    <div class="product-info">
+        <p class="product-price">R${product.price}</p>
+        <div class="stock-info">
+            <span class="stock-quantity ${quantityClass}">${product.quantity || 0} in stock</span>
+        </div>
+        <input type="number" class="quantity-control" id="qty-${product.id}" min="0" value="${product.quantity || 0}">
+        <div class="action-buttons">
+            <button class="action-btn update-btn" onclick="updateProductQuantity(${product.id})">Update</button>
+            <button class="action-btn delete-btn" onclick="deleteProduct(${product.id})">Delete</button>
+        </div>
+    </div>
+`;
+
+
+        if (product.type === "strain" || product.type === "joint") {
+            document.getElementById("weedStrainsList").appendChild(productCard);
+        } else if (product.type === "edible") {
+            document.getElementById("weedEdiblesList").appendChild(productCard);
+        } else if (product.type === "weed_accessory") {
+            document.getElementById("weedAccessoriesList").appendChild(productCard);
+        }
+    });
+}
+
+// Add this function to update product quantities
+function updateProductQuantity(productId) {
+    const newQuantity = parseInt(document.getElementById(`qty-${productId}`).value);
+    if (isNaN(newQuantity) || newQuantity < 0) {
+        alert("Please enter a valid quantity");
+        return;
+    }
+
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+    products = products.map(product => {
+        if (product.id === productId) {
+            return {...product, quantity: newQuantity};
+        }
+        return product;
+    });
+
+    localStorage.setItem("products", JSON.stringify(products));
+    loadExistingProducts();
+}
+
+        // Delete product
+        function deleteProduct(productId) {
+            let products = JSON.parse(localStorage.getItem("products"));
+            products = products.filter(product => product.id !== productId);
+            localStorage.setItem("products", JSON.stringify(products));
+            loadExistingProducts();
+        }
+
+        // Update price label
+        function updatePriceLabel() {
+            const weedCategory = document.getElementById("weedCategory").value;
+            const priceLabel = document.getElementById("priceLabel");
+
+            priceLabel.textContent = weedCategory === "strain" ? "Price per Gram (R):" : "Price per Unit (R):";
+        }
+
+        // Reset sales data
+function resetSalesData() {
+    if (!confirm("Are you sure you want to reset all sales data?")) return;
+
+    salesData = {
+        totalSales: 0,
+        totalRevenue: 0,
+        totalCustomers: 0,
+        totalGramsSold: 0,
+        totalCardSales: 0,
+        totalCashSales: 0,
+        weedSalesData: new Array(24).fill(0)
+    };
+
+    localStorage.removeItem("latestSale");
+    localStorage.removeItem("allSales");
+    localStorage.removeItem("transactions"); // <-- important
+
+    localStorage.setItem("totalSales", 0);
+    localStorage.setItem("totalRevenue", 0);
+    localStorage.setItem("totalCustomers", 0);
+    localStorage.setItem("totalGramsSold", 0);
+    localStorage.setItem("totalCardSales", 0);
+    localStorage.setItem("totalCashSales", 0);
+    localStorage.setItem("weedSalesData", JSON.stringify(salesData.weedSalesData));
+
+    updateUI();
+    alert("Sales data and transactions history have been reset!");
+}
+
+window.onload = function () {
+    // Initialize the admin panel directly
+    initializeCharts();
+    updateUI();
+    loadExistingProducts();
+    checkForNewSales();
+    updatePriceLabel();
+    
+    // Start checking for updates
+    setInterval(checkForNewSales, 1000);
+    setInterval(function() {
+        if (localStorage.getItem("stockUpdated")) {
+            loadExistingProducts();
+            localStorage.removeItem("stockUpdated");
+        }
+    }, 1000);
+};
+
+async function saveCashUp() {
+  try {
+    const salesSection = document.querySelector('.modal-content');
+    
+    // Ensure it's visible
+    if (!salesSection) {
+      alert("Cash-up section not found.");
+      return;
+    }
+
+    const canvas = await html2canvas(salesSection, {
+      scale: 2, // Higher quality image
+      backgroundColor: '#ffffff', // You can change background color here
+      ignoreElements: (el) => el.classList.contains('close') || el.classList.contains('cashup-actions')
+    });
+
+    // Convert canvas to blob
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        alert('Error creating image.');
+        return;
+      }
+
+// If using Capacitor, access Filesystem via window.Capacitor.Plugins.Filesystem
+const reader = new FileReader();
+reader.onloadend = async function () {
+  const base64Data = reader.result.split(',')[1];
+
+  if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem) {
+    await window.Capacitor.Plugins.Filesystem.writeFile({
+      path: `Cashup_${now.toISOString().split('T')[0]}.png`,
+      data: base64Data,
+      directory: 'DOCUMENTS'
+    });
+    alert('Saved to device storage!');
+  }
+};
+reader.readAsDataURL(blob);
+
+
+      const link = document.createElement('a');
+      const now = new Date();
+      const filename = `Cashup_${now.toISOString().split('T')[0]}.png`;
+
+      link.download = filename;
+      link.href = URL.createObjectURL(blob);
+      link.click();
+
+      URL.revokeObjectURL(link.href); // Clean up
+      alert('Screenshot saved successfully!');
+    }, 'image/png');
+
+  } catch (err) {
+    console.error('Screenshot error:', err);
+    alert('Failed to save screenshot.');
+  }
+}
+
+
+
+
+
+    </script>
+    <div id="cashUpModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeCashUpModal()">&times;</span>
+    <h2>Daily Cash Up Report</h2>
+    <div class="cashup-summary">
+      <div class="cashup-row">
+        <span>Date:</span>
+        <span id="cashup-date"></span>
+      </div>
+      <div class="cashup-row">
+        <span>Time:</span>
+        <span id="cashup-time"></span>
+      </div>
+      <div class="cashup-row">
+        <span>Total Grams:</span>
+        <span id="cashup-grams"></span>
+      </div>
+      <div class="cashup-row">
+        <span>Total Revenue:</span>
+        <span id="cashup-revenue"></span>
+      </div>
+      <div class="cashup-row">
+        <span>Total Customers:</span>
+        <span id="cashup-customers"></span>
+      </div>
+      <div class="cashup-row">
+        <span>Average Spend:</span>
+        <span id="cashup-avg-spend"></span>
+      </div>
+      <div class="cashup-row highlight">
+        <span>Total Card Sales:</span>
+        <span id="cashup-card-sales"></span>
+      </div>
+      <div class="cashup-row highlight">
+        <span>Total Cash Sales:</span>
+        <span id="cashup-cash-sales"></span>
+      </div>
+      <div class="cashup-row highlight">
+    <span>Total EFT Sales:</span>
+    <span id="cashup-eft-sales"></span>
+</div>
+
+      <div class="cashup-row total">
+        <span>Grand Total:</span>
+        <span id="cashup-grand-total"></span>
+      </div>
+    </div>
+    
+    <h3>Products Sold Today</h3>
+    <div id="cashup-products" class="products-list"></div>
+    
+    <div class="cashup-actions">
+    </div>
+  </div>
+</div>
+</body>
+</html>
