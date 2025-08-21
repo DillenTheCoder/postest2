@@ -1533,6 +1533,8 @@ function activateEasterEgg() {
     inputSequence = [];
 }
 
+
+
 // ----------------------
 // Barcode scanner setup
 // ----------------------
@@ -1668,6 +1670,29 @@ function flashMessage(msg) {
 window.addEventListener('load', () => {
   setupBarcodeScanner();
 });
+
+function forceKeyboard(input) {
+  if (!input) return;
+  input.addEventListener("touchstart", () => {
+    setTimeout(() => {
+      input.focus();
+      if (navigator.virtualKeyboard) {
+        navigator.virtualKeyboard.show();
+      }
+    }, 100);
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  // Apply to visible inputs where staff might want the tablet keyboard
+  forceKeyboard(document.getElementById("searchBox"));
+  forceKeyboard(document.getElementById("quantityInput"));
+  forceKeyboard(document.getElementById("cashAmount"));
+  forceKeyboard(document.getElementById("eftAmount"));
+  forceKeyboard(document.getElementById("cashSplitAmount"));
+  forceKeyboard(document.getElementById("cardSplitAmount"));
+});
+
 
 
     </script>
